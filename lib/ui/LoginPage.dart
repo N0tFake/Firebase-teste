@@ -38,7 +38,6 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {
       email = _emailController.text;
       password = _passwordController.text;
-      passwordWrog = false;
     });
 
     try{
@@ -53,9 +52,7 @@ class _LoginPageState extends State<LoginPage> {
       if(e.code == 'user-not-found'){
         print('email não cadastrado');
       } else if (e.code == 'wrong-password'){
-        setState(() {
-          passwordWrog = true;
-        });
+        print('senha errada');
       }
     }
   }
@@ -168,8 +165,6 @@ class _LoginPageState extends State<LoginPage> {
   String _validarPassword(String value){
     if(value == null || value.isEmpty){
       return 'Informe a senha';
-    }else if(passwordWrog){
-      return 'Senha errada';
     }
   }
 
