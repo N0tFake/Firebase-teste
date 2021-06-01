@@ -48,11 +48,11 @@ class _HomeState extends State<Home> {
           future: _getData(),
           builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot){
             if(snapshot.hasData && !snapshot.data.exists){
-              return Text('eita');
+              return Text('Sem nome');
             }else if(snapshot.connectionState == ConnectionState.done){
-              Map<String, dynamic> carai = snapshot.data.data();
-              print('$carai');
-              return Text('${carai['nome']}');
+              Map<String, dynamic> data = snapshot.data.data();
+              print('$data');
+              return Text('${data['nome']} - ${data['idade']} anos');
             }else{
               print(_firebaseUser.uid);
               return Text('Loading...');            
@@ -69,13 +69,13 @@ class _HomeState extends State<Home> {
       body: Row(
         children: [
           
-          /*Padding(
-            padding: const EdgeInsets.only(bottom: 50.0, left: 100),  
+          Padding(
+            padding: const EdgeInsets.only(bottom: 50.0, left: 110),  
             child: Container(
               alignment: Alignment.center, 
-              child: Text('Logado', style: TextStyle(color: Colors.white, fontSize: 50),),
+              child: Text('Home', style: TextStyle(color: Colors.white, fontSize: 50),),
             ),
-          ),*/
+          ),
           
         ],
       ),

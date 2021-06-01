@@ -17,10 +17,13 @@ class _LoginPageState extends State<LoginPage> {
   final _passwordController = TextEditingController();
 
   String email, password;
+  bool passwordWrog;
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  final _formKey = GlobalKey<FormState>();
 
   //fulando@mail.com - 123456789
   //siclano@mail.com - 987654321
@@ -28,9 +31,14 @@ class _LoginPageState extends State<LoginPage> {
   // Login
   Future _login() async{
 
+    if(!_formKey.currentState.validate()){
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('processing data')));
+    }
+
     setState(() {
       email = _emailController.text;
       password = _passwordController.text;
+      passwordWrog = false;
     });
 
     try{
@@ -45,7 +53,9 @@ class _LoginPageState extends State<LoginPage> {
       if(e.code == 'user-not-found'){
         print('email não cadastrado');
       } else if (e.code == 'wrong-password'){
-        print('Senha errada');
+        setState(() {
+          passwordWrog = true;
+        });
       }
     }
   }
@@ -58,62 +68,29 @@ class _LoginPageState extends State<LoginPage> {
         color: Colors.white,
         child: ListView(
           children: [
+            Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  _emailForm(),
+                  
+                  SizedBox(
+                    height: 10,
+                  ),
 
-            TextFormField(
-              keyboardType: TextInputType.emailAddress,
-              controller: _emailController,
-              decoration: InputDecoration(
-                labelText: "e-mail",
-                labelStyle: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.w400,
-                  fontSize: 20,
-                )
-              ),
+                  _passwordForm(),
+               
+                  SizedBox(
+                    height: 10,
+                  ),
+
+                  _buttonLogin()
+                ],
+              ) 
             ),
 
             SizedBox(
               height: 10,
-            ),
-
-            TextFormField(
-              keyboardType: TextInputType.text,
-              controller: _passwordController,
-              obscureText: true,
-              validator: (value){
-                if(value.isEmpty){
-                  return 'vazio';
-                }
-              },
-              decoration: InputDecoration(
-                labelText: 'senha',
-                labelStyle: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.w400,
-                  fontSize: 20,
-                )
-              ),
-              style: TextStyle(fontSize: 20),
-            ),
-
-            SizedBox(
-              height: 10,
-            ),
-
-            Container(  // botão de login
-              height: 60,
-              alignment: Alignment.centerLeft,
-              decoration: BoxDecoration(
-                color: Colors.red,
-                borderRadius: BorderRadius.all(Radius.circular(5))
-              ),
-
-              child: SizedBox.expand(
-                child: TextButton(
-                  onPressed: _login,
-                  child: Text('Login', style: TextStyle(color: Colors.white, fontSize: 20),)
-                )
-              ),
             ),
 
             SizedBox(
@@ -143,4 +120,75 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+
+  Widget _emailForm(){
+    return TextFormField(
+              keyboardType: TextInputType.emailAddress,
+              controller: _emailController,
+              validator: _validarEmail,
+              decoration: InputDecoration(
+                labelText: "e-mail",
+                labelStyle: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w400,
+                  fontSize: 20,
+                )
+              ),
+            );
+  }
+
+  String _validarEmail(String value){
+    String pattern = r'@';
+    RegExp regExp = RegExp(pattern);
+    if(value.length == 0){
+      return 'Informe o email';
+    }else if(!regExp.hasMatch(value)){
+      return 'Email inválido';
+    }
+  }
+
+  Widget _passwordForm(){
+    return TextFormField(  // senha
+              keyboardType: TextInputType.text,
+              controller: _passwordController,
+              obscureText: true,
+              validator: _validarPassword,
+              decoration: InputDecoration(
+                labelText: 'senha',
+                labelStyle: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w400,
+                  fontSize: 20,
+                )
+              ),
+              style: TextStyle(fontSize: 20),
+            );
+  }
+
+  String _validarPassword(String value){
+    if(value == null || value.isEmpty){
+      return 'Informe a senha';
+    }else if(passwordWrog){
+      return 'Senha errada';
+    }
+  }
+
+  Widget _buttonLogin(){
+    return Container(  // botão de login
+              height: 60,
+              alignment: Alignment.centerLeft,
+              decoration: BoxDecoration(
+                color: Colors.red,
+                borderRadius: BorderRadius.all(Radius.circular(5))
+              ),
+
+              child: SizedBox.expand(
+                child: TextButton(
+                  onPressed: _login,
+                  child: Text('Login', style: TextStyle(color: Colors.white, fontSize: 20),)
+                )
+              ),
+            );
+  }
+
 }
