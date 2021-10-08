@@ -73,7 +73,7 @@ class _HomeState extends State<Home> {
             padding: const EdgeInsets.only(bottom: 50.0, left: 110),  
             child: Container(
               alignment: Alignment.center, 
-              child: Text('CAsa kkkkk', style: TextStyle(color: Colors.white, fontSize: 50),),
+              child: Text('CAsa kkkkkkk', style: TextStyle(color: Colors.white, fontSize: 50),),
             ),
           ),
           
