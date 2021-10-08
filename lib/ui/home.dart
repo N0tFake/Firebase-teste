@@ -64,7 +64,7 @@ class _HomeState extends State<Home> {
         backgroundColor: Colors.red,
       ),
       
-      backgroundColor: Colors.red,
+      backgroundColor: Colors.blue,
       
       body: Row(
         children: [

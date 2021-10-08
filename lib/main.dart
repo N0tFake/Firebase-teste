@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: "Teste Firebase",
       theme: ThemeData(
-        primarySwatch: Colors.teal
+        primarySwatch: Colors.amber
       ),
       home: LoginPage(),
     );
